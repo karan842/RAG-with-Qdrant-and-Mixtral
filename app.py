@@ -7,6 +7,7 @@ from langchain.llms import CTransformers
 from langchain.memory import ConversationBufferMemory
 from langchain.schema import retriever
 from langchain.chains import RetrievalQA
+from langchain_mistralai.chat_models import ChatMistralAI
 from langchain.llms import OpenAI
  
 from dotenv import load_dotenv
@@ -15,7 +16,7 @@ import qdrant_client
 import streamlit as st
 # load keys from .env file
 load_dotenv()
-openai_api_key = os.getenv('OPENAI_API_KEY')
+mistral_api_key = os.getenv('MISTRALAI_API_KEY')
 qdrant_uri = os.getenv('QDRANT_URI')
 qdrant_api_key = os.getenv('QDRANT_API_KEY')
 
@@ -38,14 +39,16 @@ def get_vectore_store():
       
     return vectore_store
   
-
 def main():
     st.set_page_config(page_title="MLOps Guide")
-    st.header("Ask about MLOps💭")
+    st.header("I'm your MLOps teacher, ask about MLOps💭")
     
     vectore_store = get_vectore_store()
+    llm = ChatMistralAI(mistral_api_key=mistral_api_key,
+                        model='mistral-small')
+    
     qa = RetrievalQA.from_chain_type(
-        llm=OpenAI(),
+        llm=llm,
         chain_type='stuff',
         retriever=vectore_store.as_retriever()
     )

@@ -8,3 +8,5 @@ python-dotenv
 pypdf
 sentence-transformers
 streamlit
+ctransformers
+langchain-mistralai
